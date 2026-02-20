@@ -1,0 +1,1 @@
+export { useLocalizedHref } from "./useLocalizedHref";

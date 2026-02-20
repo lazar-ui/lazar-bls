@@ -1,0 +1,44 @@
+{
+  "Header": {
+    "Navigation": {
+      "Home": "Home",
+      "Tools": "Tools"
+    }
+  },
+  "MainPage": {
+    "title": "Professional BLS Tools for Online Therapy",
+    "description": "Enhance your remote EMDR sessions with customizable, easy-to-use bilateral stimulation tools. No installation required.",
+    "WorkFaster": {
+      "name": "Work Faster",
+      "title": "Everything you need for remote sessions",
+      "features": {
+        "RealTimeControl": {
+          "title": "Real-time Control",
+          "description": "Adjust speed, size, and trajectory on the fly to match your client's processing needs."
+        },
+        "PrivacyFirst": {
+          "title": "Privacy First",
+          "description": "No client data is stored. Everything runs locally in the browser via secure shareable links."
+        },
+        "InstantSetup": {
+          "title": "Instant Setup",
+          "description": "Just generate a link and send it to your client. They click and start immediately."
+        }
+      }
+    }
+  },
+  "ToolsPage": {
+    "title": "Therapy Tools",
+    "description": "Select an instrument to configure and share with your client.",
+    "Tools": {
+      "MindSwing": {
+        "title": "Mind Swing",
+        "description": "A customizable moving object for visual and auditory bilateral stimulation. Perfect for standard EMDR processing."
+      },
+      "AudioPulses": {
+        "title": "Audio Pulses",
+        "description": "Pure auditory bilateral stimulation with customizable tones and patterns."
+      }
+    }
+  }
+}
