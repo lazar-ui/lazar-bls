@@ -21,7 +21,9 @@
     "paths": {
       "@/*": ["./src/*"],
       "I18n/*": ["./src/i18n/*"],
-      "Models": ["./src/models"]
+      "Models": ["./src/models"],
+      "Hooks/*": ["./src/hooks/*"],
+      "Utils/*": ["./src/utils/*"]
     }
   },
   "include": [

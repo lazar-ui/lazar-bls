@@ -4,13 +4,30 @@ import React from "react";
 import Link from "next/link";
 import { Brain } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { usePathname } from "I18n/routing";
+import { usePathname, useRouter } from "I18n/routing";
+import { ELanguage, LanguageSelect } from "../LanguageSelect";
+import { useSearchParams } from "next/navigation";
 
-export const Header: React.FC = () => {
+export interface IProps {
+  /** Current UI locale. */
+  language: ELanguage;
+}
+
+export const Header: React.FC<IProps> = (props) => {
+  const { language } = props;
   const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const router = useRouter();
   const t = useTranslations("Header");
   const isHome = pathname === "/";
   const isTools = pathname.startsWith("/tools");
+
+  const handleLanguageChange = (nextLanguage: ELanguage) => {
+    const search = searchParams.toString();
+    const url = search ? `${pathname}?${search}` : pathname;
+
+    void router.replace(url, { locale: nextLanguage });
+  };
 
   return (
     <nav className="bg-white border-b border-gray-200 sticky top-0 z-50">
@@ -37,6 +54,12 @@ export const Header: React.FC = () => {
                 {t("Navigation.Tools")}
               </Link>
             </div>
+          </div>
+          <div className="flex">
+            <LanguageSelect
+              language={language}
+              onSelect={handleLanguageChange}
+            />
           </div>
         </div>
       </div>

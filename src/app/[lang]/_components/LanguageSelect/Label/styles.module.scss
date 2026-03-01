@@ -1,0 +1,36 @@
+.root {
+  align-items: center;
+  cursor: pointer;
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+
+  &.opened {
+    .chevron {
+      transform: rotate(180deg);
+    }
+  }
+}
+
+.value {
+  text-transform: uppercase;
+}
+
+.chevron {
+  background-color: currentColor;
+  clip-path: path(evenodd,
+      'M5.058 6.751a.816.816 0 0 0-.386 1.108c.125.251 5.144 5.265 5.373 5.368a.909.909 0 0 0 .7.001c.121-.055.75-.663 2.74-2.651 1.729-1.728 2.604-2.626 2.651-2.722a.83.83 0 0 0 .069-.369.629.629 0 0 0-.114-.416.818.818 0 0 0-1.041-.313c-.121.055-.682.595-2.406 2.318l-2.249 2.247-2.249-2.246C6.803 7.735 5.841 6.802 5.758 6.758c-.18-.094-.505-.097-.7-.007'
+    );
+  display: inline-block;
+  flex: 0 0 20px;
+  height: 20px;
+  transition: transform 0.3s;
+  vertical-align: middle;
+  width: 20px;
+}
+
+@media only screen and (width <=1023px) {
+  .value {
+    font-weight: 600;
+  }
+}

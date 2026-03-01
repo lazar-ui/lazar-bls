@@ -1,0 +1,22 @@
+.root {
+  align-items: center;
+  display: flex;
+  justify-content: flex-end;
+  position: relative;
+  user-select: none;
+
+  &.opened {
+    .popup {
+      display: block;
+    }
+  }
+}
+
+.popup {
+  display: none;
+  margin-top: 8px;
+  position: absolute;
+  right: 0;
+  top: 100%;
+  z-index: 1000;
+}

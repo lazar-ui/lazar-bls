@@ -1,0 +1,43 @@
+.root {
+  background: #fff;
+  border: 1px solid #e9eaeb;
+  border-radius: 8px;
+  box-shadow: 0 12px 16px -4px rgb(16 24 40 / 0.08), 0 4px 6px -2px rgb(16 24 40 / 0.03);
+  padding: 4px 0;
+}
+
+.row {
+  align-items: center;
+  cursor: pointer;
+  display: flex;
+  padding: 1px 8px;
+}
+
+.option {
+  align-items: center;
+  color: #181d27;
+  display: flex;
+  flex: 1 0 0;
+  flex-direction: row;
+  gap: 8px;
+  padding: 10px 10px 10px 8px;
+
+  &:hover {
+    background: #fafafa;
+    border-radius: 8px;
+  }
+
+  &.selected {
+    .check {
+      visibility: visible;
+    }
+  }
+}
+
+.check {
+  color: #4f46e5;
+  flex: 0 0 20px;
+  margin-left: auto;
+  min-width: 20px;
+  visibility: hidden;
+}
