@@ -20,7 +20,7 @@ export const MindSwingWidget = () => {
   const [copied, setCopied] = useState(false);
 
   const [config, setConfig] = useState<IConfig>({
-    speed: 10,
+    speed: 3,
     size: 80,
     color: "#3b82f6",
     trajectory: "h",

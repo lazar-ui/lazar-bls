@@ -1,67 +1,72 @@
-import React, { useEffect, useRef } from "react";
+import React, { useCallback, useEffect, useRef } from "react";
+
+import { useContainerSize } from "Hooks/useContainerSize";
+
 import { IConfig } from "../../models";
 import { playSound } from "../../utils/audio";
+import { MAX_DELTA_TIME_MS, SOUND_DEBOUNCE_MS } from "./consts";
+import { IVector } from "./models";
+import { calculateVelocity } from "./utils/calculateVelocity";
+import { getInitialPosition } from "./utils/getInitialPosition";
 
 interface IProps extends IConfig {
   isRunning: boolean;
 }
 
-export const BouncingBall: React.FC<IProps> = (props) => {
-  const { speed, size, color, trajectory, soundType, isRunning } = props;
+export const BouncingBall: React.FC<IProps> = ({
+  speed,
+  size,
+  color,
+  trajectory,
+  soundType,
+  isRunning,
+}) => {
+  // Рефы
   const ballRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const requestRef = useRef<number>(0);
+  const containerSize = useContainerSize(containerRef);
 
-  const pos = useRef({ x: 0, y: 0 });
-  const vel = useRef({ x: 0, y: 0 });
-  const lastHitTime = useRef(0);
+  // Состояние физики
+  const pos = useRef<IVector>({ x: 0, y: 0 });
+  const vel = useRef<IVector>({ x: 0, y: 0 });
+  const lastHitTime = useRef<number>(0);
 
-  // Initialize position and velocity
+  // Инициализация физики при изменении конфигурации
   useEffect(() => {
     if (!containerRef.current) return;
+
     const rect = containerRef.current.getBoundingClientRect();
+    vel.current = calculateVelocity(speed, rect, size, trajectory); // 'speed' из пропсов
+    pos.current = getInitialPosition(rect, size);
+  }, [containerSize.width, containerSize.height, speed, trajectory, size]);
 
-    pos.current = {
-      x: Math.max(0, rect.width / 2 - size / 2),
-      y: Math.max(0, rect.height / 2 - size / 2),
-    };
-
-    const v = speed * 1.5; // Base speed multiplier
-    if (trajectory === "h") {
-      vel.current = { x: v, y: 0 };
-    } else if (trajectory === "v") {
-      vel.current = { x: 0, y: v };
-    } else if (trajectory === "d") {
-      vel.current = { x: v, y: v };
-    }
-  }, [speed, trajectory, size]);
-
-  useEffect(() => {
-    if (!isRunning) {
-      if (requestRef.current) cancelAnimationFrame(requestRef.current);
+  // Основной цикл анимации
+  const animate = useCallback(() => {
+    if (!ballRef.current || !containerRef.current) {
       return;
     }
 
     let lastTime = performance.now();
 
     const update = (time: number) => {
-      if (!ballRef.current || !containerRef.current) return;
-
-      const dt = Math.min((time - lastTime) / 16.666, 3); // Cap dt to avoid huge jumps if tab is inactive
+      const dt = Math.min(time - lastTime, MAX_DELTA_TIME_MS) / 1000; // dt в секундах
       lastTime = time;
 
-      const rect = containerRef.current.getBoundingClientRect();
+      const rect = containerRef.current!.getBoundingClientRect();
       const maxX = Math.max(0, rect.width - size);
       const maxY = Math.max(0, rect.height - size);
 
       let { x, y } = pos.current;
       let { x: vx, y: vy } = vel.current;
 
+      // Интеграция движения
       x += vx * dt;
       y += vy * dt;
 
       let hit = false;
 
+      // Обработка столкновений
       if (x <= 0) {
         x = 0;
         vx = Math.abs(vx);
@@ -82,8 +87,8 @@ export const BouncingBall: React.FC<IProps> = (props) => {
         hit = true;
       }
 
-      // Debounce sound to prevent multiple triggers on corners
-      if (hit && time - lastHitTime.current > 50) {
+      // Дебаунс звука
+      if (hit && time - lastHitTime.current > SOUND_DEBOUNCE_MS) {
         playSound(soundType);
         lastHitTime.current = time;
       }
@@ -91,17 +96,30 @@ export const BouncingBall: React.FC<IProps> = (props) => {
       pos.current = { x, y };
       vel.current = { x: vx, y: vy };
 
-      ballRef.current.style.transform = `translate(${x}px, ${y}px)`;
+      ballRef.current!.style.transform = `translate(${x}px, ${y}px)`;
 
       requestRef.current = requestAnimationFrame(update);
     };
 
     requestRef.current = requestAnimationFrame(update);
+  }, [size, soundType]);
+
+  // Управление анимацией
+  useEffect(() => {
+    if (isRunning) {
+      animate();
+    } else {
+      if (requestRef.current) {
+        cancelAnimationFrame(requestRef.current);
+      }
+    }
 
     return () => {
-      if (requestRef.current) cancelAnimationFrame(requestRef.current);
+      if (requestRef.current) {
+        cancelAnimationFrame(requestRef.current);
+      }
     };
-  }, [isRunning, size, soundType]);
+  }, [isRunning, animate]);
 
   return (
     <div
@@ -115,7 +133,6 @@ export const BouncingBall: React.FC<IProps> = (props) => {
           width: size,
           height: size,
           backgroundColor: color,
-          transform: `translate(${pos.current.x}px, ${pos.current.y}px)`,
         }}
       />
     </div>

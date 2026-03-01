@@ -31,7 +31,7 @@ export const Settings: React.FC<IProps> = (props) => {
           <input
             type="range"
             min="1"
-            max="30"
+            max="10"
             value={config.speed}
             onChange={(e) => updateConfig("speed", Number(e.target.value))}
             className="w-full accent-indigo-500"
