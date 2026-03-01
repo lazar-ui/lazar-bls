@@ -20,9 +20,11 @@
     ],
     "paths": {
       "@/*": ["./src/*"],
+      "Firebase/*": ["./src/firebase/*"],
       "I18n/*": ["./src/i18n/*"],
       "Models": ["./src/models"],
       "Hooks/*": ["./src/hooks/*"],
+      "Services/*": ["./src/services/*"],
       "Utils/*": ["./src/utils/*"]
     }
   },

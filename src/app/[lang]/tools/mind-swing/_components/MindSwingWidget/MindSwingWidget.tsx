@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import {
   Activity,
@@ -9,42 +9,97 @@ import {
   Share2,
 } from "lucide-react";
 import Link from "next/link";
+
+import { usePathname, useRouter } from "I18n/routing";
+import {
+  createWidgetLinkAndSaveSettings,
+  getSettingsById,
+  updateSettings,
+} from "Services/mind-swing";
+
 import { initAudio } from "../../utils/audio";
 import { IConfig } from "../../models";
 import { BouncingBall } from "../BouncingBall";
 import { Settings } from "./Settings";
-import { usePathname } from "I18n/routing";
+import { useSearchParams } from "next/navigation";
+import { DEFAULT_SETTINGS } from "./consts";
 
-export const MindSwingWidget = () => {
+export const MindSwingWidget: React.FC = () => {
+  const router = useRouter();
   const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const savedId = searchParams.get("id");
   const [copied, setCopied] = useState(false);
 
-  const [config, setConfig] = useState<IConfig>({
-    speed: 3,
-    size: 80,
-    color: "#3b82f6",
-    trajectory: "h",
-    soundType: "pop",
-  });
+  const [config, setConfig] = useState<IConfig>(DEFAULT_SETTINGS);
 
-  const generateShareUrl = () => {
+  const copyIdToClipboard = (id: string, buttonEl: HTMLButtonElement) => {
     const params = new URLSearchParams();
-    params.set("s", config.speed.toString());
-    params.set("sz", config.size.toString());
-    params.set("c", config.color.replace("#", ""));
-    params.set("t", config.trajectory);
-    params.set("snd", config.soundType);
+    params.set("id", id);
 
     const url = `${window.location.origin}${pathname}/client?${params.toString()}`;
     navigator.clipboard.writeText(url);
+
     setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    setTimeout(() => {
+      buttonEl.disabled = false;
+      setCopied(false);
+    }, 2000);
+  };
+
+  const generateShareUrl = async (
+    event: React.MouseEvent<HTMLButtonElement>,
+  ) => {
+    const { currentTarget } = event;
+    currentTarget.disabled = true;
+
+    const widgetId = await createWidgetLinkAndSaveSettings(config);
+
+    if (!widgetId) {
+      alert(
+        "Failed to create widget link. Please try again or contact support.",
+      );
+      return;
+    }
+
+    const params = new URLSearchParams();
+    params.set("id", widgetId.toString());
+    router.replace(`${pathname}?${params.toString()}`);
+
+    copyIdToClipboard(widgetId, currentTarget);
+  };
+
+  const handleUpdateSettingsClick = async (
+    event: React.MouseEvent<HTMLButtonElement>,
+  ) => {
+    if (!savedId) {
+      console.warn("No savedId!");
+      return;
+    }
+
+    const { currentTarget } = event;
+    currentTarget.disabled = true;
+
+    await updateSettings(savedId, config);
+
+    copyIdToClipboard(savedId, currentTarget);
   };
 
   const onConfigChange = (nextConfig: IConfig) => {
     setConfig(nextConfig);
     initAudio(); // Initialize audio on any interaction
   };
+
+  useEffect(() => {
+    if (savedId) {
+      void getSettingsById(savedId).then((settings) => {
+        if (settings) {
+          setConfig(settings);
+        }
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className="flex h-screen w-full bg-gray-950 text-white font-sans overflow-hidden">
@@ -64,7 +119,7 @@ export const MindSwingWidget = () => {
         <Settings config={config} onChange={onConfigChange} />
         <div className="mt-auto pt-6 border-t border-gray-800">
           <button
-            onClick={generateShareUrl}
+            onClick={!savedId ? generateShareUrl : handleUpdateSettingsClick}
             className="w-full bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg py-3 px-4 flex items-center justify-center gap-2 transition-colors font-medium"
           >
             {copied ? (
