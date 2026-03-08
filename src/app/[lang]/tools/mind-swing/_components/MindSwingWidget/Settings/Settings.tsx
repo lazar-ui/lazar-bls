@@ -1,7 +1,8 @@
 import React from "react";
 
 import { ISettings } from "Services/mind-swing";
-import { DEFAULT_PALLETE } from "./consts";
+import { DEFAULT_BACKGROUND_PALLETE, DEFAULT_PALLETE } from "./consts";
+import { ColorSelect } from "./ColorSelect";
 
 export interface IProps {
   config: ISettings;
@@ -57,37 +58,26 @@ export const Settings: React.FC<IProps> = (props) => {
           />
         </div>
 
-        {/* Color */}
+        {/* Background Color */}
         <div>
-          <label className="block text-sm text-gray-400 mb-2">Color</label>
-          <div className="flex flex-col gap-3">
-            <div className="flex gap-2">
-              {DEFAULT_PALLETE.map((preset) => (
-                <button
-                  key={preset.value}
-                  onClick={() => updateConfig("color", preset.value)}
-                  className={`w-8 h-8 rounded border-2 transition-all ${config.color.toLowerCase() === preset.value ? "border-white scale-110 shadow-lg" : "border-transparent hover:scale-105"}`}
-                  style={{ backgroundColor: preset.value }}
-                  title={preset.name}
-                />
-              ))}
-            </div>
-            <div className="flex gap-2">
-              <input
-                type="color"
-                value={config.color}
-                onChange={(e) => updateConfig("color", e.target.value)}
-                className="w-10 h-10 rounded cursor-pointer bg-transparent border-0 p-0"
-              />
-              <input
-                type="text"
-                value={config.color}
-                onChange={(e) => updateConfig("color", e.target.value)}
-                className="flex-1 bg-gray-800 border border-gray-700 rounded px-3 py-2 text-sm text-gray-200 focus:outline-none focus:border-indigo-500 font-mono"
-                placeholder="#000000"
-              />
-            </div>
-          </div>
+          <label className="block text-sm text-gray-400 mb-2">
+            Background Color
+          </label>
+          <ColorSelect
+            onChange={(color) => updateConfig("background", color)}
+            preset={DEFAULT_BACKGROUND_PALLETE}
+            value={config.background}
+          />
+        </div>
+
+        {/* Ball Color */}
+        <div>
+          <label className="block text-sm text-gray-400 mb-2">Ball Color</label>
+          <ColorSelect
+            onChange={(color) => updateConfig("color", color)}
+            preset={DEFAULT_PALLETE}
+            value={config.color}
+          />
         </div>
 
         {/* Trajectory */}

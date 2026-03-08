@@ -19,7 +19,15 @@ interface IProps {
 export const BouncingBall: React.FC<IProps> = (props) => {
   const {
     onHit,
-    settings: { speed, size, color, trajectory, soundType, isRunning },
+    settings: {
+      background,
+      speed,
+      size,
+      color,
+      trajectory,
+      soundType,
+      isRunning,
+    },
   } = props;
 
   // Рефы
@@ -127,7 +135,11 @@ export const BouncingBall: React.FC<IProps> = (props) => {
   }, [isRunning, animate]);
 
   return (
-    <div ref={containerRef} className={styles.root}>
+    <div
+      ref={containerRef}
+      className={styles.root}
+      style={{ backgroundColor: background }}
+    >
       <div
         ref={ballRef}
         className="absolute rounded-full shadow-[0_0_30px_rgba(0,0,0,0.5)] will-change-transform"
