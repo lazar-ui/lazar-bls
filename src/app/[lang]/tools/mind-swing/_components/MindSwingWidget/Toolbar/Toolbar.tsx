@@ -1,7 +1,7 @@
 import React from "react";
 
 import clsx from "clsx";
-import { Play, Pause, RotateCcw, Share } from "lucide-react";
+import { Fullscreen, Play, Pause, RotateCcw, Share } from "lucide-react";
 
 import { formatTime } from "./utils";
 
@@ -9,6 +9,7 @@ import styles from "./styles.module.scss";
 
 export interface IProps {
   hitCount?: number;
+  onFullscreenToggle?: () => void;
   onReset: () => void;
   onToggle: () => void;
   played: boolean;
@@ -18,6 +19,7 @@ export interface IProps {
 export const Toolbar: React.FC<IProps> = (props) => {
   const {
     played: isRunning,
+    onFullscreenToggle,
     onToggle,
     onReset,
     time = 0,
@@ -33,6 +35,16 @@ export const Toolbar: React.FC<IProps> = (props) => {
   const handleResetClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
     onReset();
+  };
+
+  const handleFullscreenClick = (
+    event: React.MouseEvent<HTMLButtonElement>,
+  ) => {
+    event.stopPropagation();
+
+    if (onFullscreenToggle) {
+      onFullscreenToggle();
+    }
   };
 
   return (
@@ -54,6 +66,13 @@ export const Toolbar: React.FC<IProps> = (props) => {
           title="Reset Session"
         >
           <RotateCcw className="w-4 h-4" />
+        </button>
+        <button
+          onClick={handleFullscreenClick}
+          className="w-10 h-10 flex items-center justify-center bg-gray-800 hover:bg-gray-700 text-gray-300 rounded-full transition-colors"
+          title="Toggle fullscreen mode"
+        >
+          <Fullscreen className="w-4 h-4" />
         </button>
       </div>
 

@@ -107,6 +107,14 @@ export const MindSwingWidget: React.FC = () => {
     setHitCount((value) => value + 1);
   }, []);
 
+  const handleFullscreenToggle = useCallback(() => {
+    if (!document.fullscreenElement && previewContainerRef.current) {
+      previewContainerRef.current.requestFullscreen();
+    } else {
+      document.exitFullscreen();
+    }
+  }, []);
+
   useEffect(() => {
     if (savedId) {
       void getSettingsById(savedId).then((data) => {
@@ -181,6 +189,7 @@ export const MindSwingWidget: React.FC = () => {
         <div className={styles.toolbar}>
           <Toolbar
             hitCount={hitCount}
+            onFullscreenToggle={handleFullscreenToggle}
             onToggle={handleToggle}
             onReset={handleReset}
             played={settings.isRunning}
