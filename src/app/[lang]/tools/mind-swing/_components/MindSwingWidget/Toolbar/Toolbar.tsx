@@ -48,7 +48,7 @@ export const Toolbar: React.FC<IProps> = (props) => {
   };
 
   return (
-    <div className="absolute bottom-8 left-1/2 -translate-x-1/2 bg-gray-900/80 backdrop-blur-md border border-gray-800 rounded-2xl px-6 py-4 flex items-center gap-8 shadow-2xl z-50">
+    <div className={styles.root}>
       <div className="flex items-center gap-4">
         <button
           onClick={handlePlayClick}
