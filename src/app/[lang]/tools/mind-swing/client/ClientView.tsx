@@ -70,7 +70,7 @@ export const ClientView: React.FC = () => {
       );
     }
 
-    return <BouncingBall {...settings} isRunning={true} />;
+    return <BouncingBall settings={settings} />;
   };
 
   return (

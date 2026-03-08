@@ -2,25 +2,26 @@ import React, { useCallback, useEffect, useRef } from "react";
 
 import { useContainerSize } from "Hooks/useContainerSize";
 
-import { IConfig } from "../../models";
 import { playSound } from "../../utils/audio";
 import { MAX_DELTA_TIME_MS, SOUND_DEBOUNCE_MS } from "./consts";
 import { IVector } from "./models";
 import { calculateVelocity } from "./utils/calculateVelocity";
 import { getInitialPosition } from "./utils/getInitialPosition";
+import { ISettings } from "Services/mind-swing";
 
-interface IProps extends IConfig {
-  isRunning: boolean;
+import styles from "./styles.module.scss";
+
+interface IProps {
+  onHit?: () => void;
+  settings: ISettings;
 }
 
-export const BouncingBall: React.FC<IProps> = ({
-  speed,
-  size,
-  color,
-  trajectory,
-  soundType,
-  isRunning,
-}) => {
+export const BouncingBall: React.FC<IProps> = (props) => {
+  const {
+    onHit,
+    settings: { speed, size, color, trajectory, soundType, isRunning },
+  } = props;
+
   // Рефы
   const ballRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -91,6 +92,10 @@ export const BouncingBall: React.FC<IProps> = ({
       if (hit && time - lastHitTime.current > SOUND_DEBOUNCE_MS) {
         playSound(soundType);
         lastHitTime.current = time;
+
+        if (onHit) {
+          onHit();
+        }
       }
 
       pos.current = { x, y };
@@ -102,7 +107,7 @@ export const BouncingBall: React.FC<IProps> = ({
     };
 
     requestRef.current = requestAnimationFrame(update);
-  }, [size, soundType]);
+  }, [onHit, size, soundType]);
 
   // Управление анимацией
   useEffect(() => {
@@ -122,10 +127,7 @@ export const BouncingBall: React.FC<IProps> = ({
   }, [isRunning, animate]);
 
   return (
-    <div
-      ref={containerRef}
-      className="relative w-full h-full overflow-hidden bg-gray-950"
-    >
+    <div ref={containerRef} className={styles.root}>
       <div
         ref={ballRef}
         className="absolute rounded-full shadow-[0_0_30px_rgba(0,0,0,0.5)] will-change-transform"

@@ -1,16 +1,16 @@
 import React from "react";
 
-import { IConfig } from "../../../models";
+import { ISettings } from "Services/mind-swing";
 
 export interface IProps {
-  config: IConfig;
-  onChange: (config: IConfig) => void;
+  config: ISettings;
+  onChange: (config: ISettings) => void;
 }
 
 export const Settings: React.FC<IProps> = (props) => {
   const { config, onChange } = props;
 
-  const updateConfig = <T extends IConfig>(
+  const updateConfig = <T extends ISettings>(
     key: keyof T,
     value: T[typeof key],
   ) => {

@@ -2,9 +2,10 @@
  * Settings model for the Mind Swing app.
  */
 export interface ISettings {
-  speed: number;
-  size: number;
   color: string;
-  trajectory: "h" | "v" | "d";
+  isRunning: boolean;
+  size: number;
   soundType: "pop" | "click" | "beep" | "none";
+  speed: number;
+  trajectory: "h" | "v" | "d";
 }

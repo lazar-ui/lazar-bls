@@ -1,0 +1,19 @@
+.root {
+  background-color: rgb(3, 7, 18);
+  border-bottom-color: rgb(229, 231, 235);
+  color: #fff;
+  display: flex;
+  flex: 1;
+  font-family: ui-sans-serif, system-ui, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji;
+  overflow: hidden;
+  width: 100%;
+}
+
+.toolbar {
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  padding: 16px;
+  position: absolute;
+  width: 100%;
+}
