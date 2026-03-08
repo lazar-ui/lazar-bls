@@ -5,7 +5,7 @@ export interface ISettings {
   color: string;
   isRunning: boolean;
   size: number;
-  soundType: "pop" | "click" | "beep" | "none";
+  soundType: "metronome" | "pop" | "click" | "beep" | "none";
   speed: number;
   trajectory: "h" | "v" | "d";
 }

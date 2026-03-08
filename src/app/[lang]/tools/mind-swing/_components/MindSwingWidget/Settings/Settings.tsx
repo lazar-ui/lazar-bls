@@ -97,6 +97,7 @@ export const Settings: React.FC<IProps> = (props) => {
             onChange={(e) => updateConfig("soundType", e.target.value)}
             className="w-full bg-gray-800 border border-gray-700 rounded px-3 py-2 text-sm text-gray-200 focus:outline-none focus:border-indigo-500"
           >
+            <option value="metronome">Metronome</option>
             <option value="pop">Pop</option>
             <option value="click">Click</option>
             <option value="beep">Beep</option>

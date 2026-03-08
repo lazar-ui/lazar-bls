@@ -44,5 +44,14 @@ export const playSound = (type: string) => {
     gain.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
     osc.start(now);
     osc.stop(now + 0.1);
+  } else if (type === "metronome") {
+    // Sharp woodblock-like click
+    osc.type = "triangle";
+    osc.frequency.setValueAtTime(800, now);
+    osc.frequency.exponentialRampToValueAtTime(400, now + 0.02);
+    gain.gain.setValueAtTime(0.4, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.02);
+    osc.start(now);
+    osc.stop(now + 0.02);
   }
 };
