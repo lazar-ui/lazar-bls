@@ -142,7 +142,7 @@ export const BouncingBall: React.FC<IProps> = (props) => {
     >
       <div
         ref={ballRef}
-        className="absolute rounded-full shadow-[0_0_30px_rgba(0,0,0,0.5)] will-change-transform"
+        className={styles.ball}
         style={{
           width: size,
           height: size,
